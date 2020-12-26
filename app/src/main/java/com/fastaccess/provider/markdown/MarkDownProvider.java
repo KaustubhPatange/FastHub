@@ -344,12 +344,4 @@ public class MarkDownProvider {
         }
     }
 
-    public static boolean isGithubBlobImage(@NonNull Uri uri) {
-        return uri.getAuthority().equals("github.com");
-    }
-
-    public static String minifyGithubImageUri(@NonNull Uri uri) {
-        return uri.buildUpon().authority("raw.githubusercontent.com")
-                .build().toString().replace("/blob/", "/");
-    }
 }

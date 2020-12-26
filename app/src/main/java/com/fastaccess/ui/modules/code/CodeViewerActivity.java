@@ -46,6 +46,9 @@ public class CodeViewerActivity extends BaseActivity {
 
     public static Intent createIntent(@NonNull Context context, @NonNull String url, @NonNull String htmlUrl) {
         Intent intent = new Intent(context, CodeViewerActivity.class);
+        if (LinkParserHelper.isGithubBlobImage(url)) {
+            url = LinkParserHelper.minifyGithubImageUri(url);
+        }
         boolean isEnterprise = LinkParserHelper.isEnterprise(htmlUrl);
         url = LinkParserHelper.getEnterpriseGistUrl(url, isEnterprise);
         intent.putExtras(Bundler.start()

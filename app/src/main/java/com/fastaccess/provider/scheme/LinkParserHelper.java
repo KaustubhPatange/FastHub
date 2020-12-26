@@ -138,4 +138,12 @@ public class LinkParserHelper {
         }
         return gistId;
     }
+
+    public static boolean isGithubBlobImage(@NonNull String url) {
+        return Uri.parse(url).getAuthority().equals(HOST_DEFAULT) && url.contains("/blob/");
+    }
+
+    public static String minifyGithubImageUri(@NonNull String url) {
+        return url.replace(HOST_DEFAULT, RAW_AUTHORITY).replace("blob/","");
+    }
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Build;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,9 +15,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.fastaccess.R;
 import com.fastaccess.helper.AppHelper;
@@ -57,22 +56,18 @@ public class PrettifyWebView extends NestedWebView {
         initView(attrs);
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent p) {
+    @Override public boolean onInterceptTouchEvent(MotionEvent p) {
         return true;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    @SuppressLint("ClickableViewAccessibility") @Override public boolean onTouchEvent(MotionEvent event) {
         if (getParent() != null) {
             getParent().requestDisallowInterceptTouchEvent(interceptTouch);
         }
         return super.onTouchEvent(event);
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private void initView(@Nullable AttributeSet attrs) {
+    @SuppressLint("SetJavaScriptEnabled") private void initView(@Nullable AttributeSet attrs) {
         if (isInEditMode()) return;
         if (attrs != null) {
             TypedArray tp = getContext().obtainStyledAttributes(attrs, R.styleable.PrettifyWebView);
@@ -107,16 +102,14 @@ public class PrettifyWebView extends NestedWebView {
         });
     }
 
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+    @Override protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         if (onContentChangedListener != null) {
             onContentChangedListener.onScrollChanged(t == 0, t);
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
+    @Override protected void onDetachedFromWindow() {
         onContentChangedListener = null;
         super.onDetachedFromWindow();
     }
@@ -178,8 +171,7 @@ public class PrettifyWebView extends NestedWebView {
                 if (lineNumber != null) {
                     lineNo = lineNumber.replaceAll("L", "").split("-");
                 }
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         return lineNo;
     }
@@ -203,8 +195,7 @@ public class PrettifyWebView extends NestedWebView {
     }
 
     public void setGithubContent(@NonNull String source, @Nullable String baseUrl, boolean toggleNestScrolling, boolean enableBridge) {
-        if (enableBridge)
-            addJavascriptInterface(new MarkDownInterceptorInterface(this, toggleNestScrolling), "Android");
+        if (enableBridge) addJavascriptInterface(new MarkDownInterceptorInterface(this, toggleNestScrolling), "Android");
         String page = GithubHelper.generateContent(getContext(), source, baseUrl, AppHelper.isNightMode(getResources()),
                 AppHelper.isNightMode(getResources()), false);
         post(() -> loadDataWithBaseURL("file:///android_asset/md/", page, "text/html", "utf-8", null));
@@ -242,12 +233,7 @@ public class PrettifyWebView extends NestedWebView {
     private void startActivity(@Nullable Uri url) {
         if (url == null) return;
         if (MarkDownProvider.isImage(url.toString())) {
-            if (MarkDownProvider.isGithubBlobImage(url)) {
-                String minifiedUrl = MarkDownProvider.minifyGithubImageUri(url);
-                launchCodeViewerActivity(minifiedUrl);
-            } else {
-                launchCodeViewerActivity(url.toString());
-            }
+            CodeViewerActivity.startActivity(getContext(), url.toString(), url.toString());
         } else {
             String lastSegment = url.getEncodedFragment();
             if (lastSegment != null || url.toString().startsWith("#") || url.toString().indexOf('#') != -1) {
@@ -257,13 +243,8 @@ public class PrettifyWebView extends NestedWebView {
         }
     }
 
-    private void launchCodeViewerActivity(String url) {
-        CodeViewerActivity.startActivity(getContext(), url, url);
-    }
-
     private class ChromeClient extends WebChromeClient {
-        @Override
-        public void onProgressChanged(WebView view, int progress) {
+        @Override public void onProgressChanged(WebView view, int progress) {
             super.onProgressChanged(view, progress);
             if (onContentChangedListener != null) {
                 onContentChangedListener.onContentChanged(progress);
@@ -272,17 +253,14 @@ public class PrettifyWebView extends NestedWebView {
     }
 
     private class WebClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             startActivity(request.getUrl());
             return true;
         }
     }
 
     private class WebClientCompat extends WebViewClient {
-        @SuppressWarnings("deprecation")
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        @SuppressWarnings("deprecation") @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
             startActivity(Uri.parse(url));
             return true;
         }
