@@ -1,12 +1,14 @@
 package com.fastaccess.provider.markdown;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.net.Uri;
 import android.text.Html;
 import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntStream;
 import com.fastaccess.helper.InputHelper;
@@ -45,7 +47,8 @@ public class MarkDownProvider {
             ".dmg", ".pdf", ".ico", ".docx", ".doc", ".xlsx", ".hwp", ".pptx", ".show", ".mp3", ".ogg", ".ipynb"
     };
 
-    private MarkDownProvider() {}
+    private MarkDownProvider() {
+    }
 
     public static void setMdText(@NonNull TextView textView, String markdown) {
         if (!InputHelper.isEmpty(markdown)) {
@@ -54,7 +57,8 @@ public class MarkDownProvider {
                 render(textView, markdown, width);
             } else {
                 textView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                    @Override public boolean onPreDraw() {
+                    @Override
+                    public boolean onPreDraw() {
                         textView.getViewTreeObserver().removeOnPreDrawListener(this);
                         render(textView, markdown, textView.getMeasuredWidth());
                         return true;
@@ -103,7 +107,8 @@ public class MarkDownProvider {
         }
     }
 
-    @NonNull public static String stripMdText(String markdown) {
+    @NonNull
+    public static String stripMdText(String markdown) {
         if (!InputHelper.isEmpty(markdown)) {
             Parser parser = Parser.builder().build();
             Node node = parser.parse(markdown);
@@ -292,7 +297,8 @@ public class MarkDownProvider {
         name = name.toLowerCase();
         for (String value : IMAGE_EXTENSIONS) {
             String extension = MimeTypeMap.getFileExtensionFromUrl(name);
-            if ((extension != null && value.replace(".", "").equals(extension)) || name.endsWith(value)) return true;
+            if ((extension != null && value.replace(".", "").equals(extension)) || name.endsWith(value))
+                return true;
         }
         return false;
     }
@@ -314,7 +320,8 @@ public class MarkDownProvider {
         name = name.toLowerCase();
         for (String value : ARCHIVE_EXTENSIONS) {
             String extension = MimeTypeMap.getFileExtensionFromUrl(name);
-            if ((extension != null && value.replace(".", "").equals(extension)) || name.endsWith(value)) return true;
+            if ((extension != null && value.replace(".", "").equals(extension)) || name.endsWith(value))
+                return true;
         }
 
         return false;
@@ -335,5 +342,14 @@ public class MarkDownProvider {
             editText.setText(builder.toString());
             editText.setSelection(index + text.length());
         }
+    }
+
+    public static boolean isGithubBlobImage(@NonNull Uri uri) {
+        return uri.getAuthority().equals("github.com");
+    }
+
+    public static String minifyGithubImageUri(@NonNull Uri uri) {
+        return uri.buildUpon().authority("raw.githubusercontent.com")
+                .build().toString().replace("/blob/", "/");
     }
 }
