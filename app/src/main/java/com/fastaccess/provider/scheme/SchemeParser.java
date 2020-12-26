@@ -67,8 +67,9 @@ public class SchemeParser {
         launchUri(context, data, showRepoBtn, false);
     }
 
-    public static void launchUri(@NonNull Context context, @NonNull Uri data, boolean showRepoBtn, boolean newDocument) {
-        Logger.e(data);
+    public static void launchUri(@NonNull Context context, @NonNull Uri uri, boolean showRepoBtn, boolean newDocument) {
+        Logger.e(uri);
+        Uri data = LinkParserHelper.parseReferenceSymbols(uri);
         Intent intent = convert(context, data, showRepoBtn);
         if (intent != null) {
             intent.putExtra(BundleConstant.SCHEME_URL, data.toString());
