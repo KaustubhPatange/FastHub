@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.View;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.evernote.android.state.State;
 import com.fastaccess.R;
 import com.fastaccess.data.dao.FilesListModel;
@@ -21,6 +23,7 @@ import com.fastaccess.provider.rest.RestProvider;
 import com.fastaccess.ui.adapter.GistFilesAdapter;
 import com.fastaccess.ui.base.BaseFragment;
 import com.fastaccess.ui.modules.code.CodeViewerActivity;
+import com.fastaccess.ui.modules.gists.GistFragmentHelper;
 import com.fastaccess.ui.modules.gists.create.dialog.AddGistBottomSheetDialog;
 import com.fastaccess.ui.modules.main.premium.PremiumActivity;
 import com.fastaccess.ui.widgets.StateLayout;
@@ -49,8 +52,9 @@ public class GistFilesListFragment extends BaseFragment<GistFilesListMvp.View, G
 
     public static GistFilesListFragment newInstance(@NonNull ArrayList<FilesListModel> files, boolean isOwner) {
         GistFilesListFragment view = new GistFilesListFragment();
+        ArrayList<FilesListModel> filtered = GistFragmentHelper.mapNonMarkdownFiles(files);
         view.setArguments(Bundler.start()
-                .putParcelableArrayList(BundleConstant.ITEM, files)
+                .putParcelableArrayList(BundleConstant.ITEM, filtered)
                 .put(BundleConstant.EXTRA_TYPE, isOwner)
                 .end());
         return view;
@@ -176,7 +180,8 @@ public class GistFilesListFragment extends BaseFragment<GistFilesListMvp.View, G
 
     private boolean canOpen(@NonNull FilesListModel item) {
         if (item.getRawUrl() == null) return false;
-        if (item.getSize() > FileHelper.ONE_MB && !MarkDownProvider.isImage(item.getRawUrl())) {
+        if (item.getSize() < FileHelper.ONE_MB && MarkDownProvider.isImage(item.getRawUrl())) return true;
+        if (!GistFragmentHelper.isTextMimeType(item)) {
             MessageDialogView.newInstance(getString(R.string.big_file), getString(R.string.big_file_description), false, true,
                     Bundler.start().put(BundleConstant.YES_NO_EXTRA, true).put(BundleConstant.EXTRA, item.getRawUrl()).end())
                     .show(getChildFragmentManager(), "MessageDialogView");

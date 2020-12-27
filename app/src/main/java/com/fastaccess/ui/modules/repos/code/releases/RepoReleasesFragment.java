@@ -201,7 +201,7 @@ public class RepoReleasesFragment extends BaseFragment<RepoReleasesMvp.View, Rep
         if (activity == null) return;
         ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboardManager.setPrimaryClip(ClipData.newRawUri(item.url, Uri.parse(item.url)));
-        Toasty.info(activity, activity.getString(R.string.success_copied)).show();
+        Toasty.success(activity, activity.getString(R.string.success_copied)).show();
     }
 
     @Override public void onScrollTop(int index) {
