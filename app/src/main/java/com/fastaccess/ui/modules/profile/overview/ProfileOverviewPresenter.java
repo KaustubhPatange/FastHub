@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.rx2.Rx2Apollo;
 import com.fastaccess.data.dao.model.Login;
 import com.fastaccess.data.dao.model.User;
@@ -19,6 +21,8 @@ import com.fastaccess.ui.base.mvp.presenter.BasePresenter;
 import com.fastaccess.ui.widgets.contributions.ContributionsDay;
 import com.fastaccess.ui.widgets.contributions.ContributionsProvider;
 import com.fastaccess.ui.widgets.contributions.GitHubContributionsView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,7 +118,7 @@ class ProfileOverviewPresenter extends BasePresenter<ProfileOverviewMvp.View> im
                 .filter(dataResponse -> !dataResponse.hasErrors())
                 .flatMap(dataResponse -> {
                     if (dataResponse.data() != null && dataResponse.data().user() != null) {
-                        return Observable.fromIterable(dataResponse.data().user().pinnedRepositories().edges());
+                        return Observable.fromIterable(dataResponse.data().user().pinnedItems().edges());
                     }
                     return Observable.empty();
                 })

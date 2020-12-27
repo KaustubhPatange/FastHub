@@ -27,19 +27,21 @@ class ProfilePinnedReposViewHolder private constructor(view: View, adapter: Base
     override fun bind(t: GetPinnedReposQuery.Node) {}
 
     fun bind(t: GetPinnedReposQuery.Node, numberFormat: NumberFormat) {
-        title.text = t.name()
-        issues.text = numberFormat.format(t.issues().totalCount())
-        pullRequest.text = numberFormat.format(t.pullRequests().totalCount())
-        forks.text = numberFormat.format(t.forks().totalCount())
-        stars.text = numberFormat.format(t.stargazers().totalCount())
-        t.primaryLanguage()?.let {
-            language.text = it.name()
-            it.color()?.let {
-                if (it.startsWith("#")) {
-                    language.tintDrawables(Color.parseColor(it))
-                } else {
-                    val color = "#$it"
-                    language.tintDrawables(Color.parseColor(color))
+        if (t is GetPinnedReposQuery.AsRepository) {
+            title.text = t.name()
+            issues.text = numberFormat.format(t.issues().totalCount())
+            pullRequest.text = numberFormat.format(t.pullRequests().totalCount())
+            forks.text = numberFormat.format(t.forks().totalCount())
+            stars.text = numberFormat.format(t.stargazers().totalCount())
+            t.primaryLanguage()?.let {
+                language.text = it.name()
+                it.color()?.let {
+                    if (it.startsWith("#")) {
+                        language.tintDrawables(Color.parseColor(it))
+                    } else {
+                        val color = "#$it"
+                        language.tintDrawables(Color.parseColor(color))
+                    }
                 }
             }
         }

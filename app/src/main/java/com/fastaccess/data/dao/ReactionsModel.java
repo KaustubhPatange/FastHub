@@ -16,7 +16,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import github.PullRequestTimelineQuery;
 
 /**
  * Created by Kosh on 28 Mar 2017, 9:15 PM

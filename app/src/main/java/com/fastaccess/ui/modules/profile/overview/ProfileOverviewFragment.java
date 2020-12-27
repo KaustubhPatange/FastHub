@@ -273,7 +273,10 @@ public class ProfileOverviewFragment extends BaseFragment<ProfileOverviewMvp.Vie
             ProfilePinnedReposAdapter adapter = new ProfilePinnedReposAdapter(nodes);
             adapter.setListener(new BaseViewHolder.OnItemClickListener<GetPinnedReposQuery.Node>() {
                 @Override public void onItemClick(int position, View v, GetPinnedReposQuery.Node item) {
-                    SchemeParser.launchUri(getContext(), item.url().toString());
+                    if (item instanceof GetPinnedReposQuery.AsRepository) {
+                        GetPinnedReposQuery.AsRepository repo = (GetPinnedReposQuery.AsRepository) item;
+                        SchemeParser.launchUri(getContext(), repo.url().toString());
+                    }
                 }
 
                 @Override public void onItemLongClick(int position, View v, GetPinnedReposQuery.Node item) {}

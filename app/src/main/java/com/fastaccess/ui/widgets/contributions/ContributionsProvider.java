@@ -24,11 +24,11 @@ public class ContributionsProvider {
         int fillPos = -1;
         int dataPos = -1;
         int datePos = -1;
-        while (true) {
+        while (contributions.size() < 365) {
             fillPos = string.indexOf(FILL_STRING, fillPos + 1);
             dataPos = string.indexOf(DATA_STRING, dataPos + 1);
             datePos = string.indexOf(DATE_STRING, datePos + 1);
-            if (fillPos == -1) break;
+            if (dataPos == -1 || fillPos == -1) break;
             int level = 0;
             String levelString = string.substring(fillPos + FILL_STRING.length(), dataPos - 2);
             switch (levelString) {
