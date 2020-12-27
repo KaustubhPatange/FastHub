@@ -105,8 +105,8 @@ class FullScreenFileChangeActivity : BaseActivity<FullScreenFileChangeMvp.View, 
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.submit -> {
                 sendResult()
                 true

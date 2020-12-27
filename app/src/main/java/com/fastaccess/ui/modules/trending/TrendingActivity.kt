@@ -130,8 +130,8 @@ class TrendingActivity : BaseActivity<TrendingMvp.View, TrendingPresenter>(), Tr
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.menu -> {
                 drawerLayout.openDrawer(Gravity.END)
                 true

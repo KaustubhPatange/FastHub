@@ -43,7 +43,12 @@ public class ListDialogView<O extends Parcelable> extends BaseDialogFragment imp
         void onItemSelected(O item);
     }
 
+    public interface onSimpleItemLongSelection<O extends Parcelable> {
+        void onItemLongSelected(O item);
+    }
+
     @Nullable private onSimpleItemSelection onSimpleItemSelection;
+    @Nullable private onSimpleItemLongSelection onSimpleItemLongSelection;
 
     @Override protected int fragmentLayout() {
         return R.layout.simple_list_dialog;
@@ -65,16 +70,24 @@ public class ListDialogView<O extends Parcelable> extends BaseDialogFragment imp
 
     @Override public void onAttach(@NotNull Context context) {
         super.onAttach(context);
-        if (getParentFragment() != null && getParentFragment() instanceof onSimpleItemSelection) {
-            onSimpleItemSelection = (onSimpleItemSelection) getParentFragment();
-        } else if (context instanceof onSimpleItemSelection) {
-            onSimpleItemSelection = (onSimpleItemSelection) context;
+        if (getParentFragment() != null) {
+            if (getParentFragment() instanceof onSimpleItemSelection)
+                onSimpleItemSelection = (onSimpleItemSelection) getParentFragment();
+            if (getParentFragment() instanceof onSimpleItemLongSelection)
+                onSimpleItemLongSelection = (onSimpleItemLongSelection) getParentFragment();
+        } else {
+            if (context instanceof onSimpleItemSelection)
+                onSimpleItemSelection = (onSimpleItemSelection) context;
+            if (context instanceof onSimpleItemLongSelection)
+                onSimpleItemLongSelection = (onSimpleItemLongSelection) context;
         }
+
     }
 
     @Override public void onDetach() {
         super.onDetach();
         onSimpleItemSelection = null;
+        onSimpleItemLongSelection = null;
     }
 
     @NonNull @Override public TiPresenter providePresenter() {
@@ -88,7 +101,11 @@ public class ListDialogView<O extends Parcelable> extends BaseDialogFragment imp
         dismiss();
     }
 
-    @Override public void onItemLongClick(int position, View v, O item) {}
+    @SuppressWarnings("unchecked") @Override public void onItemLongClick(int position, View v, O item) {
+        if (onSimpleItemLongSelection != null) {
+            onSimpleItemLongSelection.onItemLongSelected(item);
+        }
+    }
 
     public void initArguments(@NonNull String title, @NonNull ArrayList<O> objects) {
         setArguments(Bundler.start()

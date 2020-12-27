@@ -50,8 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="?android:attr/textColorSecondary"
-                    tools:text="1000"
-                    tools:visibility="gone"/>
+                    tools:text="1000"/>
             </LinearLayout>
 
             <com.fastaccess.ui.widgets.ForegroundImageView

@@ -11,6 +11,7 @@ import com.fastaccess.helper.PrefGetter
 
 /**
  * Created by Kosh on 11 Apr 2017, 10:02 PM
+ * Migrated by Kaustubh on 27th Dec 2020, 1:34 PM
  */
 object LinkParserHelper {
     const val HOST_DEFAULT = "github.com"
@@ -24,7 +25,7 @@ object LinkParserHelper {
             "explore", "dashboard", "repositories", "logout", "sessions", "site", "security",
             "contact", "about", "logos", "login", "pricing", "")
 
-    val escapeSymbols: Map<String, String> = mapOf(
+    private val escapeSymbols: Map<String, String> = mapOf(
             "&quot;" to "\"", "&apos;" to "'",
             "&lt;" to "<", "&gt;" to ">", "&amp;" to "&")
 
@@ -88,14 +89,14 @@ object LinkParserHelper {
 
     @JvmStatic
     fun getEndpoint(url: String): String {
-        var url = url
-        if (url.startsWith("http://")) {
-            url = url.replace("http://", "https://")
+        var urlString = url
+        if (urlString.startsWith("http://")) {
+            urlString = urlString.replace("http://", "https://")
         }
-        if (!url.startsWith("https://")) {
-            url = "https://$url"
+        if (!urlString.startsWith("https://")) {
+            urlString = "https://$urlString"
         }
-        return getEnterpriseUrl(url)
+        return getEnterpriseUrl(urlString)
     }
 
     private fun getEnterpriseUrl(url: String): String {

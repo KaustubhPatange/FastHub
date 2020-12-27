@@ -72,8 +72,8 @@ class ProjectPagerActivity : BaseActivity<ProjectPagerMvp.View, ProjectPagerPres
 
     override fun isTransparent(): Boolean = true
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             android.R.id.home -> {
                 val repoId = presenter.repoId
                 if (repoId != null && !repoId.isNullOrBlank()) {

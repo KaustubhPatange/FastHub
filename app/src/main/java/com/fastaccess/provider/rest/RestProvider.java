@@ -2,11 +2,14 @@ package com.fastaccess.provider.rest;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.fastaccess.BuildConfig;
@@ -97,11 +100,18 @@ public class RestProvider {
         downloadFile(context, url, null);
     }
 
+    /** AuthToken seems to be issue for not downloading any binary files. Source files seems to be downloaded fine.
+     *
+     * Suppose if we remove it then we fix the above but then downloading private releases seems to not work then.
+     * In such case we pass :open: as extension.
+     *
+     * @param extension If it is :open: then open the custom tab activity
+     */
     public static void downloadFile(@NonNull Context context, @NonNull String url, @Nullable String extension) {
         try {
             if (InputHelper.isEmpty(url)) return;
             boolean isEnterprise = LinkParserHelper.isEnterprise(url);
-            if (url.endsWith(".apk")) {
+            if (extension != null && extension.equals(":open:")) {
                 Activity activity = ActivityHelper.getActivity(context);
                 if (activity != null) {
                     ActivityHelper.startCustomTab(activity, url);
@@ -112,10 +122,13 @@ public class RestProvider {
             DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
             DownloadManager.Request request = new DownloadManager.Request(uri);
             String authToken = isEnterprise ? PrefGetter.getEnterpriseToken() : PrefGetter.getToken();
-            if (!TextUtils.isEmpty(authToken)) {
+            // Do not set auth token for "releases" url.
+            if (!TextUtils.isEmpty(authToken) && !url.contains("releases/")) {
                 request.addRequestHeader("Authorization", authToken.startsWith("Basic") ? authToken : "token " + authToken);
             }
             String fileName = new File(url).getName();
+            // Remove the fileName which appends '?token='
+            if (fileName.contains("?token=")) fileName = fileName.substring(0, fileName.indexOf("?token="));
             if (!InputHelper.isEmpty(extension)) {
                 fileName += extension;
             }

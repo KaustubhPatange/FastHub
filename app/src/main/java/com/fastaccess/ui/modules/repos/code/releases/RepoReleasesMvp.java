@@ -22,7 +22,7 @@ import java.util.List;
 interface RepoReleasesMvp {
 
     interface View extends BaseMvp.FAView, SwipeRefreshLayout.OnRefreshListener,
-            android.view.View.OnClickListener, ListDialogView.onSimpleItemSelection<SimpleUrlsModel> {
+            android.view.View.OnClickListener, ListDialogView.onSimpleItemLongSelection<SimpleUrlsModel>, ListDialogView.onSimpleItemSelection<SimpleUrlsModel> {
         void onNotifyAdapter(@Nullable List<Release> items, int page);
 
         @NonNull OnLoadMore getLoadMore();
