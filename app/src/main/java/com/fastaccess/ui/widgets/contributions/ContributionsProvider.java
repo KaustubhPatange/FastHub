@@ -30,35 +30,30 @@ public class ContributionsProvider {
             datePos = string.indexOf(DATE_STRING, datePos + 1);
             if (fillPos == -1) break;
             int level = 0;
-            String levelString = string.substring(fillPos + FILL_STRING.length(), fillPos + FILL_STRING.length() + 7);
+            String levelString = string.substring(fillPos + FILL_STRING.length(), dataPos - 2);
             switch (levelString) {
+                case "var(--color-calendar-graph-day-bg)":
                 case "#eeeeee":
-                    level = 0;
-                    break;
-                case "#d6e685":
-                    level = 1;
-                    break;
-                case "#8cc665":
-                    level = 2;
-                    break;
-                case "#44a340":
-                    level = 3;
-                    break;
-                case "#1e6823":
-                    level = 4;
-                    break;
                 case "#ebedf0":
                     level = 0;
                     break;
+                case "var(--color-calendar-graph-day-L1-bg)":
+                case "#d6e685":
                 case "#239a3b":
                     level = 1;
                     break;
+                case "var(--color-calendar-graph-day-L2-bg)":
+                case "#8cc665":
                 case "#c6e48b":
                     level = 2;
                     break;
+                case "var(--color-calendar-graph-day-L3-bg)":
+                case "#44a340":
                 case "#7bc96f":
                     level = 3;
                     break;
+                case "var(--color-calendar-graph-day-L4-bg)":
+                case "#1e6823":
                 case "#196127":
                     level = 4;
                     break;
