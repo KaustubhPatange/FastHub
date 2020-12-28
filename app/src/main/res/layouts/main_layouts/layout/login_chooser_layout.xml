@@ -138,10 +138,19 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/spacing_normal"
                         android:paddingEnd="@dimen/spacing_xs_large"
-                        android:paddingStart="@dimen/spacing_xs_large"
-                        android:paddingTop="@dimen/spacing_normal">
+                        android:paddingStart="@dimen/spacing_xs_large">
 
                         <com.fastaccess.ui.widgets.FontTextView
+                            style="@style/TextAppearance.AppCompat.Small"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:gravity="center_horizontal"
+                            android:text="@string/basic_authentication_report"
+                            android:textColor="@color/material_yellow_700"/>
+
+                        <com.fastaccess.ui.widgets.FontTextView
+                            android:visibility="gone"
                             android:id="@+id/basicAuth"
                             style="@style/TextAppearance.AppCompat.Title"
                             android:layout_width="match_parent"
@@ -160,8 +169,7 @@
                             android:gravity="center"
                             android:paddingBottom="@dimen/spacing_normal"
                             android:paddingEnd="@dimen/spacing_large"
-                            android:paddingStart="@dimen/spacing_large"
-                            android:text="@string/or_character"/>
+                            android:paddingStart="@dimen/spacing_large"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"

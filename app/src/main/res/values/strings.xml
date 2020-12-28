@@ -604,4 +604,5 @@
     <string name="send_feedback">Send feedback</string>
     <string name="private_wiki_error_msg">Unfortunately we cannot access private repos wiki</string>
     <string name="file_history">File History</string>
+    <string name="basic_authentication_report">Starting from November 13th, 2020, Github no longer accept login via account password aka \"Basic Authentication\".</string>
 </resources>
