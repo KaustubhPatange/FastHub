@@ -13,7 +13,8 @@ import com.fastaccess.ui.base.mvp.presenter.BasePresenter
  */
 class EditRepoFilePresenter : BasePresenter<EditRepoFileMvp.View>(), EditRepoFileMvp.Presenter {
 
-    @com.evernote.android.state.State var model: EditRepoFileModel? = null
+    @com.evernote.android.state.State
+    var model: EditRepoFileModel? = null
     var fileContent: String? = null
 
     var downloadedContent: String? = null
@@ -42,16 +43,16 @@ class EditRepoFilePresenter : BasePresenter<EditRepoFileMvp.View>(), EditRepoFil
         if (!text.isNullOrBlank() && !description.isNullOrBlank() && !filename.isNullOrBlank()) {
             model?.let {
                 val commitModel = CommitRequestModel(description!!, Base64.encodeToString(text!!.toByteArray(), Base64.DEFAULT), it.sha, it.ref)
-                val observable = RestProvider.getContentService(isEnterprise).updateCreateFile(it.login, it.repoId,
-                        if (it.path.isNullOrBlank()) {
-                            filename!!
-                        } else {
-                            if (it.path!!.endsWith("/")) {
-                                "${it.path}$filename"
-                            } else {
-                                "${it.path}"
-                            }
-                        }, it.ref, commitModel)
+                val path = if (it.path.isNullOrBlank()) {
+                    filename!!
+                } else {
+                    if (it.path!!.endsWith("/")) {
+                        "${it.path}$filename"
+                    } else {
+                        "${it.path}"
+                    }
+                }
+                val observable = RestProvider.getContentService(isEnterprise).updateCreateFile(it.login, it.repoId, path, it.ref, commitModel)
                 makeRestCall(observable, { sendToView { it.onSuccessfullyCommitted() } })
             }
         }

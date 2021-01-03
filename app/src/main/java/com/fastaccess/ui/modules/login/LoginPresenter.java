@@ -73,7 +73,7 @@ public class LoginPresenter extends BasePresenter<LoginMvp.View> implements Logi
                 .appendPath("authorize")
                 .appendQueryParameter("client_id", GithubConfigHelper.getClientId())
                 .appendQueryParameter("redirect_uri", GithubConfigHelper.getRedirectUrl())
-                .appendQueryParameter("scope", "user,repo,gist,notifications,read:org")
+                .appendQueryParameter("scope", "user,repo,gist,notifications,read:org,workflow")
                 .appendQueryParameter("state", BuildConfig.APPLICATION_ID)
                 .build();
     }
