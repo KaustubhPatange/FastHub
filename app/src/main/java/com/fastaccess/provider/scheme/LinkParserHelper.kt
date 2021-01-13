@@ -167,4 +167,9 @@ object LinkParserHelper {
         }
         return Uri.parse(formattedUrl)
     }
+
+    @JvmStatic
+    fun<T> joinToString(delimiter: CharSequence, elements: List<T>): String {
+        return elements.joinToString(separator = delimiter)
+    }
 }

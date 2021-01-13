@@ -19,8 +19,11 @@ import com.fastaccess.ui.modules.repos.code.commit.RepoCommitsFragment
  */
 class FileCommitHistoryActivity : BaseActivity<BaseMvp.FAView, BasePresenter<BaseMvp.FAView>>() {
 
-    @State var login: String? = null
-    @State var repoId: String? = null
+    @State
+    var login: String? = null
+
+    @State
+    var repoId: String? = null
 
     override fun layout(): Int = R.layout.activity_fragment_layout
 
@@ -42,9 +45,9 @@ class FileCommitHistoryActivity : BaseActivity<BaseMvp.FAView, BasePresenter<Bas
             repoId = bundle.getString(BundleConstant.ID)
             login = bundle.getString(BundleConstant.EXTRA)
             supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, RepoCommitsFragment.newInstance(bundle), RepoCommitsFragment::class.java.simpleName)
-                .commit()
+                    .beginTransaction()
+                    .replace(R.id.container, RepoCommitsFragment.newInstance(bundle), RepoCommitsFragment::class.java.simpleName)
+                    .commit()
         }
     }
 
@@ -56,7 +59,6 @@ class FileCommitHistoryActivity : BaseActivity<BaseMvp.FAView, BasePresenter<Bas
                 val bundle = intent.extras
                 val intent = RepoPagerActivity.createIntent(this, repoId, login)
                 bundle?.putBoolean(BundleConstant.IS_ENTERPRISE, isEnterprise)
-                bundle?.let { intent.putExtras(it) }
                 startActivity(intent)
                 finish()
             }
@@ -66,21 +68,28 @@ class FileCommitHistoryActivity : BaseActivity<BaseMvp.FAView, BasePresenter<Bas
     }
 
     companion object {
+
+        @JvmStatic
+        fun createIntent(context: Context, login: String, repoId: String, branch: String, path: String,
+                         enterprise: Boolean): Intent {
+            return Intent(context, FileCommitHistoryActivity::class.java).apply {
+                putExtras(
+                        Bundler.start()
+                                .put(BundleConstant.ID, repoId)
+                                .put(BundleConstant.EXTRA, login)
+                                .put(BundleConstant.EXTRA_TWO, branch)
+                                .put(BundleConstant.EXTRA_THREE, path)
+                                .put(BundleConstant.IS_ENTERPRISE, enterprise)
+                                .end()
+                )
+            }
+        }
+
         fun startActivity(
-            context: Context, login: String, repoId: String, branch: String, path: String,
-            enterprise: Boolean
+                context: Context, login: String, repoId: String, branch: String, path: String,
+                enterprise: Boolean
         ) {
-            val intent = Intent(context, FileCommitHistoryActivity::class.java)
-            intent.putExtras(
-                Bundler.start()
-                    .put(BundleConstant.ID, repoId)
-                    .put(BundleConstant.EXTRA, login)
-                    .put(BundleConstant.EXTRA_TWO, branch)
-                    .put(BundleConstant.EXTRA_THREE, path)
-                    .put(BundleConstant.IS_ENTERPRISE, enterprise)
-                    .end()
-            )
-            context.startActivity(intent)
+            context.startActivity(createIntent(context, login, repoId, branch, path, enterprise))
         }
     }
 }

@@ -26,6 +26,7 @@ import com.fastaccess.ui.modules.gists.gist.GistActivity;
 import com.fastaccess.ui.modules.repos.RepoPagerActivity;
 import com.fastaccess.ui.modules.repos.RepoPagerMvp;
 import com.fastaccess.ui.modules.repos.code.commit.details.CommitPagerActivity;
+import com.fastaccess.ui.modules.repos.code.commit.history.FileCommitHistoryActivity;
 import com.fastaccess.ui.modules.repos.code.files.activity.RepoFilesActivity;
 import com.fastaccess.ui.modules.repos.code.releases.ReleasesListActivity;
 import com.fastaccess.ui.modules.repos.issues.create.CreateIssueActivity;
@@ -37,7 +38,9 @@ import com.fastaccess.ui.modules.search.SearchActivity;
 import com.fastaccess.ui.modules.trending.TrendingActivity;
 import com.fastaccess.ui.modules.user.UserPagerActivity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static com.fastaccess.provider.scheme.LinkParserHelper.API_AUTHORITY;
 import static com.fastaccess.provider.scheme.LinkParserHelper.HOST_DEFAULT;
@@ -380,23 +383,13 @@ public class SchemeParser {
         List<String> segments = Stream.of(uri.getPathSegments())
                 .filter(value -> !value.equalsIgnoreCase("api") || !value.equalsIgnoreCase("v3"))
                 .toList();
-        if (segments == null || segments.isEmpty() || segments.size() < 3) return null;
-        String login = null;
-        String repoId = null;
-        String sha = null;
-        if (segments.size() > 3 && segments.get(3).equals("commits")) {
-            login = segments.get(1);
-            repoId = segments.get(2);
-            sha = segments.get(4);
-        } else if (segments.size() > 2 && segments.get(2).equals("commits")) {
-            login = segments.get(0);
-            repoId = segments.get(1);
-            sha = uri.getLastPathSegment();
-        }
-        if (login != null && sha != null && repoId != null) {
-            return CommitPagerActivity.createIntent(context, repoId, login, sha, showRepoBtn);
-        }
-        return null;
+        if (segments == null || segments.isEmpty() || segments.size() < 4 || !"commits".equals(segments.get(2))) return null;
+        String login = segments.get(0);
+        String repoId = segments.get(1);
+        String branch = segments.get(3);
+        String path = LinkParserHelper.joinToString("/", segments.subList(4, segments.size() - 1));
+
+        return FileCommitHistoryActivity.createIntent(context, login, repoId, branch, path, PrefGetter.isEnterprise());
     }
 
     @Nullable private static Intent getCommit(@NonNull Context context, @NonNull Uri uri, boolean showRepoBtn) {
