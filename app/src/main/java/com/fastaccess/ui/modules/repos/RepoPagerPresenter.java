@@ -21,6 +21,7 @@ import com.fastaccess.ui.modules.repos.code.RepoCodePagerFragment;
 import com.fastaccess.ui.modules.repos.issues.RepoIssuesPagerFragment;
 import com.fastaccess.ui.modules.repos.projects.RepoProjectsFragmentPager;
 import com.fastaccess.ui.modules.repos.pull_requests.RepoPullRequestPagerFragment;
+import com.fastaccess.ui.widgets.dialog.MessageDialogView;
 
 import io.reactivex.Observable;
 

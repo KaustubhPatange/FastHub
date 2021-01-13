@@ -419,6 +419,7 @@ public class PrefGetter {
     }
 
     public static boolean isAllFeaturesUnlocked() {
+        if (BuildConfig.DEBUG) return true; // TODO: Remove this if it effects.
         return isProEnabled() && isEnterprise();
     }
 

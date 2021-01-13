@@ -57,35 +57,53 @@
 
         </androidx.core.widget.NestedScrollView>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="end"
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal">
 
             <com.fastaccess.ui.widgets.FontButton
-                android:id="@+id/cancel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/neutral"
+                android:layout_gravity="start"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/edit"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="?colorAccent" />
+
+            <com.fastaccess.ui.widgets.FontButton
+                app:layout_constraintEnd_toStartOf="@id/ok"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/cancel"
                 android:layout_gravity="end"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/material_pink_700" />
 
             <com.fastaccess.ui.widgets.FontButton
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/ok"
+                android:layout_gravity="end"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:text="@string/ok"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="?colorAccent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
     <ProgressBar

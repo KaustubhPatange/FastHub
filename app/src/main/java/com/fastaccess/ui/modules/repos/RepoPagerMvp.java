@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import com.fastaccess.data.dao.model.Repo;
 import com.fastaccess.ui.base.mvp.BaseMvp;
 import com.fastaccess.ui.modules.filter.chooser.FilterAddChooserListener;
+import com.fastaccess.ui.widgets.dialog.MessageDialogView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,7 +38,7 @@ public interface RepoPagerMvp {
     @Retention(RetentionPolicy.SOURCE) @interface RepoNavigationType {}
 
 
-    interface View extends BaseMvp.FAView, FilterAddChooserListener {
+    interface View extends BaseMvp.FAView, FilterAddChooserListener/*, MessageDialogView.MessageDialogViewButtonCallback*/ {
 
         void onNavigationChanged(@RepoNavigationType int navType);
 
