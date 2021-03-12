@@ -1,6 +1,7 @@
 package com.fastaccess.ui.modules.repos.code.contributors;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,6 +24,8 @@ interface RepoContributorsMvp {
         void onNotifyAdapter(@Nullable List<User> items, int page);
 
         @NonNull OnLoadMore getLoadMore();
+
+        void onShowGraph(User user);
     }
 
     interface Presenter extends BaseMvp.FAPresenter,
@@ -32,6 +35,8 @@ interface RepoContributorsMvp {
         void onFragmentCreated(@NonNull Bundle bundle);
 
         void onWorkOffline();
+
+        void onShowPopupMenu(android.view.View view, int position);
 
         @NonNull ArrayList<User> getUsers();
     }

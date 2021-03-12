@@ -35,6 +35,12 @@ public class UsersViewHolder extends BaseViewHolder<User> {
         return new UsersViewHolder(getView(parent, isFilter ? R.layout.users_small_row_item : R.layout.feeds_row_item), adapter, isFilter);
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        avatar.performLongClick();
+        return super.onLongClick(v);
+    }
+
     @Override public void onClick(View v) {
         if (isFilter) {
             super.onClick(v);

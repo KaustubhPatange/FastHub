@@ -14,6 +14,7 @@ import com.fastaccess.helper.Bundler;
 import com.fastaccess.provider.rest.loadmore.OnLoadMore;
 import com.fastaccess.ui.adapter.UsersAdapter;
 import com.fastaccess.ui.base.BaseFragment;
+import com.fastaccess.ui.modules.repos.code.graph.GraphContributorsFragment;
 import com.fastaccess.ui.widgets.StateLayout;
 import com.fastaccess.ui.widgets.recyclerview.DynamicRecyclerView;
 import com.fastaccess.ui.widgets.recyclerview.scroll.RecyclerViewFastScroller;
@@ -114,6 +115,13 @@ public class RepoContributorsFragment extends BaseFragment<RepoContributorsMvp.V
             onLoadMore = new OnLoadMore(getPresenter());
         }
         return onLoadMore;
+    }
+
+    @Override
+    public void onShowGraph(User user) {
+        String repoId = getArguments().getString(BundleConstant.ID);
+        GraphContributorsFragment.newInstance(user.getLogin(), repoId, true)
+                .show(getChildFragmentManager(), "GraphContributorsFragment");
     }
 
     @Override public void onRefresh() {

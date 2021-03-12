@@ -3,14 +3,18 @@ package com.fastaccess.ui.modules.repos.code.contributors;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.view.View;
 
+import android.view.View;
+import android.widget.PopupMenu;
+
+import com.fastaccess.R;
 import com.fastaccess.data.dao.model.User;
 import com.fastaccess.helper.BundleConstant;
 import com.fastaccess.helper.InputHelper;
 import com.fastaccess.provider.rest.RestProvider;
 import com.fastaccess.ui.base.mvp.BaseMvp;
 import com.fastaccess.ui.base.mvp.presenter.BasePresenter;
+import com.fastaccess.ui.modules.repos.code.graph.GraphContributorsFragment;
 
 import java.util.ArrayList;
 
@@ -63,6 +67,20 @@ class RepoContributorsPresenter extends BasePresenter<RepoContributorsMvp.View> 
         return true;
     }
 
+    @Override
+    public void onShowPopupMenu(View v, int pos) {
+        PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+        popupMenu.inflate(R.menu.repo_contributors_menu);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_show_graph) {
+                sendToView(view -> view.onShowGraph(users.get(pos)));
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
+    }
+
     @Override public void onFragmentCreated(@NonNull Bundle bundle) {
         repoId = bundle.getString(BundleConstant.ID);
         login = bundle.getString(BundleConstant.EXTRA);
@@ -86,5 +104,7 @@ class RepoContributorsPresenter extends BasePresenter<RepoContributorsMvp.View> 
 
     @Override public void onItemClick(int position, View v, User item) {}
 
-    @Override public void onItemLongClick(int position, View v, User item) {}
+    @Override public void onItemLongClick(int position, View v, User item) {
+        onShowPopupMenu(v, position);
+    }
 }

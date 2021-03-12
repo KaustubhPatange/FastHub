@@ -6,7 +6,7 @@ buildscript {
         lombokVersion = '1.18.10'
         supportVersion = "27.1.0"
         thirtyinchVersion = '0.9.6'
-        retrofit = '2.7.0'
+        retrofit = '2.9.0'
         junitVersion = '4.12'
         mockitoVersion = '1.10.19'
         assertjVersion = '2.5.0'
