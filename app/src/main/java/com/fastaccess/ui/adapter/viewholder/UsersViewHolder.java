@@ -10,6 +10,7 @@ import com.fastaccess.data.dao.model.User;
 import com.fastaccess.provider.scheme.LinkParserHelper;
 import com.fastaccess.ui.widgets.AvatarLayout;
 import com.fastaccess.ui.widgets.FontTextView;
+import com.fastaccess.ui.widgets.ForegroundImageView;
 import com.fastaccess.ui.widgets.recyclerview.BaseRecyclerAdapter;
 import com.fastaccess.ui.widgets.recyclerview.BaseViewHolder;
 
@@ -24,6 +25,7 @@ public class UsersViewHolder extends BaseViewHolder<User> {
     @BindView(R.id.avatarLayout) AvatarLayout avatar;
     @BindView(R.id.title) FontTextView title;
     @BindView(R.id.date) FontTextView date;
+    @BindView(R.id.menu) ForegroundImageView menu;
     private boolean isFilter;
 
     private UsersViewHolder(@NonNull View itemView, @Nullable BaseRecyclerAdapter adapter, boolean isFilter) {
@@ -33,12 +35,6 @@ public class UsersViewHolder extends BaseViewHolder<User> {
 
     public static UsersViewHolder newInstance(@NonNull ViewGroup parent, @Nullable BaseRecyclerAdapter adapter, boolean isFilter) {
         return new UsersViewHolder(getView(parent, isFilter ? R.layout.users_small_row_item : R.layout.feeds_row_item), adapter, isFilter);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        avatar.performLongClick();
-        return super.onLongClick(v);
     }
 
     @Override public void onClick(View v) {
@@ -57,6 +53,8 @@ public class UsersViewHolder extends BaseViewHolder<User> {
         title.setText(user.getLogin());
         date.setVisibility(!isContributor ? View.GONE : View.VISIBLE);
         if (isContributor) {
+            menu.setVisibility(View.VISIBLE);
+            menu.setOnClickListener(this::onLongClick);
             date.setText(String.format("%s (%s)", date.getResources().getString(R.string.commits), user.getContributions()));
         }
     }

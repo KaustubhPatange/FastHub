@@ -27,6 +27,7 @@ class GraphView @JvmOverloads constructor(
     private val maxLines: Int = 5
     private var widthSpacing: Float = 0f
     private var commits: Int = 0
+    private var textDistance: Float = 0f
     private val textBounds = Rect()
     private val path = Path()
 
@@ -54,6 +55,7 @@ class GraphView @JvmOverloads constructor(
             if (commits % 5 != 0) {
                 commits = getNearestRoundTo5(commits.toDouble())
             }
+            if (commits == 0) commits = 5
 
             val heightSpec = MeasureSpec.makeMeasureSpec(lineDistance.toInt() * maxLines, MeasureSpec.EXACTLY)
             linePaint.getTextBounds(maxCommit.toString(), 0, maxCommit.toString().length, textBounds)
@@ -64,7 +66,8 @@ class GraphView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        var startX = textPadding * 2 + textBounds.width()
+        textDistance = textPadding * 3 + textBounds.width()
+        var startX = textDistance
         val minHeight = height.toFloat() - textBounds.height() / 4
         widthSpacing = (width - startX) / graphData.size
         path.reset()
@@ -84,7 +87,7 @@ class GraphView @JvmOverloads constructor(
         var decHeight = 0f
         for(i in 0..maxLines) {
             canvas.drawText("${i * commits}", textPadding, height.toFloat() - decHeight, linePaint)
-            canvas.drawLine(textPadding * 2 + textBounds.width(), height.toFloat() - decHeight - textBounds.height() / 4, width.toFloat(), height.toFloat() - decHeight - textBounds.height() / 4, linePaint)
+            canvas.drawLine(textDistance, height.toFloat() - decHeight - textBounds.height() / 4, width.toFloat(), height.toFloat() - decHeight - textBounds.height() / 4, linePaint)
             decHeight += lineDistance
         }
         canvas.withClip(path) {

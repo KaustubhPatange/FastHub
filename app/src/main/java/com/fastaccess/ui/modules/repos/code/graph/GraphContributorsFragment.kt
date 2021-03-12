@@ -1,7 +1,6 @@
 package com.fastaccess.ui.modules.repos.code.graph
 
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -15,10 +14,9 @@ import com.fastaccess.provider.rest.RestProvider
 import com.fastaccess.ui.base.BaseDialogFragment
 import com.fastaccess.ui.base.mvp.BaseMvp
 import com.fastaccess.ui.base.mvp.presenter.BasePresenter
-import kotlinx.coroutines.CoroutineScope
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.launch
 import java.util.*
 
 class GraphContributorsFragment : BaseDialogFragment<BaseMvp.FAView, BasePresenter<BaseMvp.FAView>>() {
@@ -51,23 +49,30 @@ class GraphContributorsFragment : BaseDialogFragment<BaseMvp.FAView, BasePresent
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val login = arguments?.getString("OwnerName")
-        val filterOwner = arguments?.getBoolean("FilterOwner") ?: true
+        val filterByLogin = arguments?.getString("FilterOwner")
         viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
             viewModel.contributions.filterNotNull().collect { stateModel ->
-                // TODO: Add support for displaying full
-
-                val weeks = stateModel.items.first { it.author.login == login }.weeks
-                val firstDate = Calendar.getInstance().apply {
-                    time = Date(weeks.first().w * 1000)
+                if (filterByLogin != null) {
+                    val weeks = stateModel.items.first { it.author.login == filterByLogin }.weeks
+                    val firstDate = Calendar.getInstance().apply {
+                        time = Date(weeks.first().w * 1000)
+                    }
+                    val lastDate = Calendar.getInstance().apply {
+                        time = Date(weeks.last().w * 1000)
+                    }
+                    titleView.text = "${getDateString(firstDate)} - ${getDateString(lastDate)}"
+                    graphView.graphData = weeks
+                    graphView.visibility = View.VISIBLE
+                } else {
+                    // TODO: Add support for displaying full
                 }
-                val lastDate = Calendar.getInstance().apply {
-                    time = Date(weeks.last().w * 1000)
-                }
-                titleView.text = "${getDateString(firstDate)} - ${getDateString(lastDate)}"
-                graphView.graphData = weeks
-                graphView.visibility = View.VISIBLE
                 swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
+        viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
+            viewModel.error.filterNotNull().collect {
+                Toasty.error(requireContext(), it).show()
             }
         }
     }
@@ -77,13 +82,13 @@ class GraphContributorsFragment : BaseDialogFragment<BaseMvp.FAView, BasePresent
     }
 
     companion object {
-        @JvmStatic
-        fun newInstance(owner: String, repo: String, filterOwner: Boolean = true): GraphContributorsFragment {
+        @JvmStatic @JvmOverloads
+        fun newInstance(owner: String, repo: String, filterByLogin: String? = null): GraphContributorsFragment {
             val fragment = GraphContributorsFragment()
             fragment.arguments = Bundler.start()
                     .put("OwnerName", owner)
                     .put("RepoName", repo)
-                    .put("FilterOwner", filterOwner)
+                    .put("FilterOwner", filterByLogin)
                     .end()
             return fragment
         }

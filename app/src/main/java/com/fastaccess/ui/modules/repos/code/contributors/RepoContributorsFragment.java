@@ -119,8 +119,9 @@ public class RepoContributorsFragment extends BaseFragment<RepoContributorsMvp.V
 
     @Override
     public void onShowGraph(User user) {
+        String login = getArguments().getString(BundleConstant.EXTRA);
         String repoId = getArguments().getString(BundleConstant.ID);
-        GraphContributorsFragment.newInstance(user.getLogin(), repoId, true)
+        GraphContributorsFragment.newInstance(login, repoId, user.getLogin())
                 .show(getChildFragmentManager(), "GraphContributorsFragment");
     }
 

@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class GraphContributorsViewModel(
         private val repoService: RepoService,
@@ -15,13 +16,20 @@ class GraphContributorsViewModel(
         private val repo: String
 ) : ViewModel() {
     val contributions = MutableStateFlow<StatsModel?>(null)
-
+    val error = MutableStateFlow<String?>(null)
     init {
         viewModelScope.launch {
-            val model = repoService.getContributors(owner, repo)
-            val response = model.string()
-            val statsModel : StatsModel? = Gson().fromJson(response, object : TypeToken<StatsModel?>() {}.type)
-            contributions.value = statsModel
+            try {
+                val model = repoService.getContributors(owner, repo)
+                val response = model.string()
+                model.close() // Close when not needed
+                val statsModel : StatsModel? = Gson().fromJson(response, object : TypeToken<StatsModel?>() {}.type)
+                if (statsModel != null) {
+                    contributions.value = statsModel
+                }
+            }catch (e: Exception) {
+                error.value = e.message
+            }
         }
     }
 }
