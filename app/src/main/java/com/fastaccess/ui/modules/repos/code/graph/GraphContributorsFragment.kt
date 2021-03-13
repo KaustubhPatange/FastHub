@@ -14,6 +14,8 @@ import com.fastaccess.provider.rest.RestProvider
 import com.fastaccess.ui.base.BaseDialogFragment
 import com.fastaccess.ui.base.mvp.BaseMvp
 import com.fastaccess.ui.base.mvp.presenter.BasePresenter
+import com.kpstv.github.GraphModel
+import com.kpstv.github.GraphView
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
@@ -61,7 +63,7 @@ class GraphContributorsFragment : BaseDialogFragment<BaseMvp.FAView, BasePresent
                         time = Date(weeks.last().w * 1000)
                     }
                     titleView.text = "${getDateString(firstDate)} - ${getDateString(lastDate)}"
-                    graphView.graphData = weeks
+                    graphView.graphData = weeks.map { GraphModel(it.w, it.a.toLong(), it.d.toLong(), it.c.toLong()) }
                     graphView.visibility = View.VISIBLE
                 } else {
                     // TODO: Add support for displaying full
@@ -78,7 +80,7 @@ class GraphContributorsFragment : BaseDialogFragment<BaseMvp.FAView, BasePresent
     }
 
     private fun getDateString(calendar: Calendar): String {
-       return "${calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ROOT)} ${calendar.get(Calendar.DAY_OF_MONTH)} ${calendar.get(Calendar.YEAR)}"
+       return "${calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ROOT)} ${calendar.get(Calendar.DAY_OF_MONTH)}, ${calendar.get(Calendar.YEAR)}"
     }
 
     companion object {
